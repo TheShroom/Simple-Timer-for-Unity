@@ -20,15 +20,15 @@ Timer timer;
 
 private void Start()
 {
-	timer = TimerManager.CreateTimer(5.0f, () => { ResetTimer(); });
+    timer = TimerManager.CreateTimer(5.0f, () => { ResetTimer(); });
 }
 
 private void ResetTimer()
 {
-	Debug.Log("Hello, SimpleTimer!!");
-  // Do stuff...
-  timer.Reset();
-  Timer.Start();
+    Debug.Log("Hello, SimpleTimer!!");
+    // Do stuff...
+    timer.Reset();
+    Timer.Start();
 }
 ```
 
