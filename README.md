@@ -7,7 +7,7 @@ With this single line of code you can easily create a fully functional timer.
 ```
 TimerManager.CreateTimer(5.0f, () => { Debug.Log("Hello, SimpleTimer!"); });
 ```
-Once this line runs, your timer will be activated and whatever delegate you passed to it will be invoked after x amount of seconds specified in the first parameter of the `CreateTimer` function.
+Once this line runs, your timer will be activated and whatever delegate you passed to it will be invoked after x amount of seconds specified in the first parameter of the `CreateTimer` function. (In this case 5.0f, so five seconds)
 
 ### Customization
 The Simple Timer also supports customizing a timer to suit your needs.
@@ -16,7 +16,7 @@ This timer value can be used to call functions directly on the actual timer.
 
 You could for example, do something like this if you want to timer the reset when it has finished, so it keeps going forever.
 ```
-Timer timer;
+TimerManager.Timer timer;
 
 private void Start()
 {
@@ -30,6 +30,17 @@ private void ResetTimer()
     timer.Reset();
     Timer.Start();
 }
+```
+
+When a timer has been created you should always delete it when you're done with it to prevent memory leaks.
+
+You can easily delete a created timer by passing it to the `DeleteTimer` function like this:
+```
+TimerManager.Timer timer = TimerManager.CreateTimer(5.0f, () => { Debug.Log("Hello, SimpleTimer!"); });
+// Do stuff...
+
+// We are done with the timer, remove it.
+TimerManager.DeleteTimer(timer);
 ```
 
 ### Documentation
