@@ -8,17 +8,43 @@ namespace TheShroom // Author
 { 
 	namespace SimpleTimer // Project name
 	{
-		public class TimerManager : MonoBehaviour // The only reason we derive from MonoBehaviouris to get access to the Update function. (probably a bad idea)
+		public class TimerManager : MonoBehaviour // The only reason we derive from MonoBehaviours to get access to the Update function. (probably a bad idea)
 		{
 			public class Timer
 			{
+                /// <summary>
+                /// Delegate type that onTimerFinished uses.
+                /// </summary>
 				public delegate void OnTimerFinished();
+
+                /// <summary>
+                /// Gets invoked when the timer has finished counting down. This is set by the user.
+                /// </summary>
 				private OnTimerFinished onTimerFinished;
+
+                /// <summary>
+                /// The time that has elapsed since the timer started counting. (in seconds)
+                /// </summary>
 				private float elapsedTime;
+
+                /// <summary>
+                /// The amount of time (in seconds) the timer should wait before finishing and invoking.
+                /// </summary>
 				private float waitTime;
+
+                /// <summary>
+                /// If true, the timer is paused and will not count down.
+                /// </summary>
 				private bool paused;
+
+                /// <summary>
+                /// If true, the timer has finished.
+                /// </summary>
 				private bool finished;
 
+                /// <summary>
+                /// Creates and initializes a new instance of a Timer.
+                /// </summary>
 				internal Timer(float waitTime, Timer.OnTimerFinished onTimerFinished, bool startNow = true)
 				{
 					SetWaitTime(waitTime);
@@ -56,6 +82,7 @@ namespace TheShroom // Author
 				/// </summary>
 				public void Reset()
 				{
+                    finished = false;
 					SetElapsedTime(0.0f);
 				}
 
@@ -115,6 +142,25 @@ namespace TheShroom // Author
 					onTimerFinished = delgt;
 				}
 
+                /// <summary>
+                /// Returns true if the timer is paused, false otherwise.
+                /// </summary>
+                public bool IsPaused()
+                {
+                    return paused;
+                }
+
+                /// <summary>
+                /// Returns true if the timer has finished counting down, false otherwise.
+                /// </summary>
+                public bool IsFinished()
+                {
+                    return finished;
+                }
+
+                /// <summary>
+                /// Handles the countdown of the timer as well as calls the Finish() function when the timer has counted down.
+                /// </summary>
 				internal void Update()
 				{
 					if (!paused && !finished)
@@ -128,12 +174,18 @@ namespace TheShroom // Author
 					}
 				}
 
+                /// <summary>
+                /// Gets called when the timer has finished its countdown. Sets the state of the timer and called the invoke function.
+                /// </summary>
 				private void Finish()
 				{
 					finished = true;
 					InvokeFinishedDelegate();
 				}
 
+                /// <summary>
+                /// Gets called when the timer has finished its countdown. Handles invoking the onTimerFinished delegate.
+                /// </summary>
 				private void InvokeFinishedDelegate()
 				{
 					if (onTimerFinished != null) // Only invoke if it has a subscriber. This should technically be impossible, but still.
@@ -147,8 +199,14 @@ namespace TheShroom // Author
 				}
 			}
 
+            /// <summary>
+            /// A list of all created timers. This is the reason to why not calling DeleteTimer on a created timer causes a memory leak.
+            /// </summary>
 			private static List<Timer> timers = new List<Timer>();
 
+            /// <summary>
+            /// Creates a new timer. If startNow is set to true, it will automatically start the countdown. If not you will have to call Start().
+            /// </summary>
 			public static Timer CreateTimer(float waitTime, Timer.OnTimerFinished onTimerFinished, bool startNow = true)
 			{
 				Debug.Log("Creating SimpleTimer");
@@ -156,9 +214,23 @@ namespace TheShroom // Author
 				return timers[timers.Count - 1]; // Return a reference to the created timer.
 			}
 
+            /// <summary>
+            /// Deletes the timer. This should ALWAYS be called when the timer is no longer used.
+            /// If you never call it the timer is gonna stay in memory forever which mean that you'll get a memory leak.
+            /// Note: Still trying to find a better, automatic way of removing them. At first I removed them as soon as it finished,
+            ///       but if the user is trying to reset the timer and restart it after it has finished this wouldn't be possible.
+            /// </summary>
+            public static void DeleteTimer(Timer timer)
+            {
+                timers.Remove(timer);
+            }
+
+            /// <summary>
+            /// Loops through all created timers and updates them.
+            /// </summary>
 			private void Update()
 			{
-				foreach (Timer t in timers)
+				foreach (Timer t in timers) // Call update all timers so that they can subtract deltatime each frame.
 				{
 					t.Update();
 				}
