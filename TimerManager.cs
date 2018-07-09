@@ -1,15 +1,21 @@
 // Copyright TheShroom 2018 | (https://github.com/TheShroom)
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Collections.Generic; // Useed for List.
+using UnityEngine; // TimerManager derives from MonoBehaviour.
 
-namespace TheShroom // Author
+namespace TheShroom // Author namespace
 { 
 	namespace SimpleTimer // Project name
 	{
+        /// <summary>
+        /// Handles creation and destruction of all the created timers as well as updates them each frame.
+        /// </summary>
 		public class TimerManager : MonoBehaviour // The only reason we derive from MonoBehaviours to get access to the Update function. (probably a bad idea)
 		{
+            /// <summary>
+            /// A timer which invokes a delegate when it has finished counting down.
+            /// This should not be instantiated directly, use TimerManager.CreateTimer() instead.
+            /// </summary>
 			public class Timer
 			{
                 /// <summary>
@@ -136,11 +142,21 @@ namespace TheShroom // Author
 
 				/// <summary>
 				/// Sets the delegate to invoke when the timer finishes.
+                /// When the timer is finished and you don't need it anymore, don't forget to call RemoveListener.
 				/// </summary>
-				public void SetDelegate(OnTimerFinished delgt)
+				public void AddListener(OnTimerFinished delgt)
 				{
-					onTimerFinished = delgt;
+					onTimerFinished += delgt;
 				}
+
+                /// <summary>
+                /// Removes the specified delegate from the delegate invokation list.
+                /// This should be called in cases where you want to unsibscribe a function
+                /// </summary>
+                public void RemoveListener(OnTimerFinished delgt)
+                {
+                    onTimerFinished -= delgt;
+                }
 
                 /// <summary>
                 /// Returns true if the timer is paused, false otherwise.
@@ -163,14 +179,16 @@ namespace TheShroom // Author
                 /// </summary>
 				internal void Update()
 				{
-					if (!paused && !finished)
+					if (!paused && !finished) // If the timer isn't paused and it hasn't finished,
 					{
+                        // we can go ahead and count up. (This is also referred to as the countdown, even though it's not a literal countdown)
 						elapsedTime += Time.deltaTime;
 					}
 
+                    // If the timer hasn't finished already and the elapsed time is the same or has exceeded the waiting time,
 					if (!finished && elapsedTime >= waitTime)
 					{
-						Finish();
+						Finish(); // we can go ahead and finish the timer.
 					}
 				}
 
@@ -180,7 +198,7 @@ namespace TheShroom // Author
 				private void Finish()
 				{
 					finished = true;
-					InvokeFinishedDelegate();
+					InvokeFinishedDelegate(); // The timer has finished; invoke the delegate.
 				}
 
                 /// <summary>
@@ -188,7 +206,7 @@ namespace TheShroom // Author
                 /// </summary>
 				private void InvokeFinishedDelegate()
 				{
-					if (onTimerFinished != null) // Only invoke if it has a subscriber. This should technically be impossible, but still.
+					if (onTimerFinished != null) // Only invoke if it has a subscriber.
 					{
 						onTimerFinished.Invoke();
 					}
@@ -230,7 +248,7 @@ namespace TheShroom // Author
             /// </summary>
 			private void Update()
 			{
-				foreach (Timer t in timers) // Call update all timers so that they can subtract deltatime each frame.
+				foreach (Timer t in timers) // Call update all timers so that they can add deltatime each frame.
 				{
 					t.Update();
 				}
