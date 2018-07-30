@@ -1,6 +1,4 @@
-// Copyright TheShroom 2018 | (https://github.com/TheShroom)
-
-using System.Collections.Generic; // Useed for List.
+using System.Collections.Generic; // Used for List.
 using UnityEngine; // TimerManager derives from MonoBehaviour.
 
 namespace TheShroom // Author namespace
