@@ -42,6 +42,27 @@ private void ResetTimer()
 }
 ```
 
+It also let's you use another delegate on the timer called the `OnTimerTicked` delegate. This gets invoked every time the timer updates. (Which is every frame as long as the timer isn't paused)
+
+The way you would do this is:
+```
+TimerManager.Timer timer = TimerManager.CreateTimer(5.0f, () => { Debug.Log("Hello, SimpleTimer!"); }, () => { Debug.Log("Timer Ticked!") });
+// Do stuff...
+
+// We are done with the timer, remove it.
+TimerManager.DeleteTimer(timer);
+```
+
+Or if you don't need one of the delegates; maybe you don't need to know when the timer finishes, only when it ticks, you could just send null to the delegate:
+```
+TimerManager.Timer timer = TimerManager.CreateTimer(5.0f, null, () => { Debug.Log("Timer Ticked!") });
+// Do stuff...
+
+// We are done with the timer, remove it.
+TimerManager.DeleteTimer(timer);
+```
+
+
 ### Documentation
 The documentation for the SimpleTimer can be found inside the actual script file.
 Everything is commented so that you won't have any problems understanding how to use it.
