@@ -59,7 +59,7 @@ namespace TheShroom // Author namespace
                 /// <summary>
                 /// Creates and initializes a new instance of a Timer.
                 /// </summary>
-				internal Timer(float waitTime, Timer.OnTimerFinished onTimerFinished = null, bool startNow = true, Timer.OnTimerTicked onTimerTicked = null)
+				internal Timer(float waitTime, Timer.OnTimerFinished onTimerFinished = null, Timer.OnTimerTicked onTimerTicked = null, bool startNow = true)
 				{
 		    		SetWaitTime(waitTime);
 		    		this.onTimerFinished = onTimerFinished;
@@ -258,23 +258,14 @@ namespace TheShroom // Author namespace
 
         	/// <summary>
        		/// Creates a new timer. If startNow is set to true, it will automatically start the countdown. If not you will have to call Start().
+			/// If you don't want to use one of the delegates (for example the onTimerFinished) you can just pass null to it.
         	/// </summary>
-	    	public static Timer CreateTimer(float waitTime, Timer.OnTimerFinished onTimerFinished = null, bool startNow = true, Timer.OnTimerTicked onTimerTicked = null)
+	    	public static Timer CreateTimer(float waitTime, Timer.OnTimerFinished onTimerFinished = null, Timer.OnTimerTicked onTimerTicked = null, bool startNow = true)
 	    	{
 	        	Debug.Log("Creating SimpleTimer");
-				timers.Add(new Timer(waitTime, onTimerFinished, startNow, onTimerTicked));
+				timers.Add(new Timer(waitTime, onTimerFinished, onTimerTicked, startNow));
 				return timers[timers.Count - 1]; // Return a reference to the created timer.
 	    	}
-
-			/// <summary>
-			/// Create a new timer.!-- If StartNow is set to true, it will automatically start the countdown. If not you will have to call Start().
-			/// </summary>
-			public static Timer CreateTimer(float waitTime, Timer.OnTimerTicked onTimerTicked = null, bool startNow = true, Timer.OnTimerFinished onTimerFinished = null)
-			{
-	        	Debug.Log("Creating SimpleTimer");
-				timers.Add(new Timer(waitTime, onTimerFinished, startNow, onTimerTicked));
-				return timers[timers.Count - 1]; // Return a reference to the created timer.
-			}
 
             /// <summary>
             /// Deletes the timer. This should ALWAYS be called when the timer is no longer used.
