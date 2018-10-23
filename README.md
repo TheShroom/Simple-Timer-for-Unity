@@ -1,6 +1,5 @@
 # Simple Timer for Unity
 This simple C# Unity script allows you to create easy-to-use timers that invoke a function when they finish.
-With this script in your hands, the days of writing custom timers everywhere are long gone.
 
 ### Sample Code
 With this single line of code you can easily create a fully functional timer.
