@@ -61,12 +61,3 @@ TimerManager.Timer timer = TimerManager.CreateTimer(5.0f, null, () => { Debug.Lo
 // We are done with the timer, remove it.
 TimerManager.DeleteTimer(timer);
 ```
-
-
-### Documentation
-The documentation for the SimpleTimer can be found inside the actual script file.
-Everything is commented so that you won't have any problems understanding how to use it.
-If something isn't commented, it will probably be soon.
-
-### Last Notes
-Feel free to use this script for whatever you'd like. You can modify it if you'd like too as well. As long as you keep the copyright notice on top with a note below saying that you modified it. There's however no need to credit me in the actual game or anything like that, just in the source code.
